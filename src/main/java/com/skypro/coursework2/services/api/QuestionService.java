@@ -2,14 +2,16 @@ package com.skypro.coursework2.services.api;
 
 import com.skypro.coursework2.model.Question;
 
-public interface QuestionService {
-    Question add(String question, String answer);
+import java.util.Map;
 
-    Question add(Question question);
+public interface QuestionService {
+    String add(String question, String answer);
+
+
 
     Question remove(Question question);
 
-  //  Coolection<Question> getAll();
+    Map<String, String> getAll();
 
     Question getRandomQuestion();
 
