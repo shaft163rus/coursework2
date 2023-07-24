@@ -1,16 +1,19 @@
 package com.skypro.coursework2.services.impl;
 
 import com.skypro.coursework2.exceptions.InvalidQuestionAmountException;
+import com.skypro.coursework2.model.Question;
 import com.skypro.coursework2.services.api.ExaminerService;
 import com.skypro.coursework2.services.api.QuestionService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 
 public class ExaminerServiceImpl implements ExaminerService {
-    private final HashMap<String,String> randomQuestions = new HashMap<>();
+    private final Set<Question> examQuestions = new HashSet<>();
     private final QuestionService javaQuestionService;
 
     public ExaminerServiceImpl(QuestionService questionService) {
@@ -19,17 +22,16 @@ public class ExaminerServiceImpl implements ExaminerService {
 
 
     @Override
-    public HashMap<String, String> getQuestions(int amount) {
+    public Set<Question> getQuestions(int amount) {
 
-
-
-        for (int i = 0; i <= amount; i++) {
-            randomQuestions.put(javaQuestionService.getRandomQuestion().getQuestion(), javaQuestionService.getRandomQuestion().getAnswer());
-            if (randomQuestions.size() > amount) {
-                throw new InvalidQuestionAmountException("Invalid amount");
-            }
+        if (javaQuestionService.getAll().size() < amount) {
+            throw new InvalidQuestionAmountException("Invalid amount");
         }
 
-        return randomQuestions;
+        while (examQuestions.size() <= amount) {
+            examQuestions.add(javaQuestionService.getRandomQuestion());
+        }
+
+        return examQuestions;
     }
 }

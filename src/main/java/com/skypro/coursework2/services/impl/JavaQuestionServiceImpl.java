@@ -9,48 +9,41 @@ import java.util.*;
 @Service
 
 public class JavaQuestionServiceImpl implements QuestionService {
-    private Question question;
-    public HashMap<String, String> questions = new HashMap<>();
+
+    private final Set<Question> questions = new HashSet<>();
+
 
     @Override
     public String add(String question, String answer) {
-        questions.put(question, question);
+        Question thisQuestion = new Question(question, answer);
+        questions.add(thisQuestion);
 
-        return question;
+        return thisQuestion.toString();
     }
-
 
 
     @Override
     public Question remove(Question question) {
-        questions.remove(question.getQuestion());
+        questions.remove(question);
 
         return question;
     }
 
     @Override
-    public Map<String, String> getAll() {
-        return null;
+    public Set<Question> getAll() {
+        return questions;
     }
 
     @Override
     public Question getRandomQuestion() {
-
-        Map.Entry<String, String> randomValue = getRandomEntryFromMap(questions);
-        question.setQuestion(randomValue.getKey());
-        question.setAnswer(randomValue.getValue());
-
-        return question;
+        return getRandomElementFromSet(questions);
     }
 
-    public static <K, V> Map.Entry<K, V> getRandomEntryFromMap(Map<K, V> map) {
-        int randomIndex = new Random().nextInt(map.size());
-        K randomKey = map.keySet().stream().skip(randomIndex).findFirst().orElse(null);
-        if (randomKey != null) {
-            V randomValue = map.get(randomKey);
-            return new HashMap.SimpleEntry<>(randomKey, randomValue);
-        } else {
-            return null;
-        }
+    public static <T> T getRandomElementFromSet(Set<T> set) {
+        int randomIndex = new Random().nextInt(set.size());
+        T[] array = (T[]) set.toArray();
+        return array[randomIndex];
     }
+
+
 }
