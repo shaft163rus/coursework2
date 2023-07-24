@@ -1,49 +1,44 @@
 package com.skypro.coursework2.services.impl;
 
 import com.skypro.coursework2.model.Question;
+import com.skypro.coursework2.repository.JavaQuestionRepository;
 import com.skypro.coursework2.services.api.QuestionService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-
+@Qualifier("javaImplementation")
 public class JavaQuestionServiceImpl implements QuestionService {
 
-    private final Set<Question> questions = new HashSet<>();
+    private final JavaQuestionRepository javaQuestionRepository;
+
+    public JavaQuestionServiceImpl(JavaQuestionRepository javaQuestionRepository) {
+        this.javaQuestionRepository = javaQuestionRepository;
+    }
 
 
     @Override
-    public String add(String question, String answer) {
-        Question thisQuestion = new Question(question, answer);
-        questions.add(thisQuestion);
-
-        return thisQuestion.toString();
+    public Question add(Question question) {
+        javaQuestionRepository.add(question);
+        return question;
     }
 
 
     @Override
     public Question remove(Question question) {
-        questions.remove(question);
+        javaQuestionRepository.remove(question);
 
         return question;
     }
 
     @Override
     public Set<Question> getAll() {
-        return questions;
+        return javaQuestionRepository.getAll();
     }
 
-    @Override
-    public Question getRandomQuestion() {
-        return getRandomElementFromSet(questions);
-    }
 
-    public static <T> T getRandomElementFromSet(Set<T> set) {
-        int randomIndex = new Random().nextInt(set.size());
-        T[] array = (T[]) set.toArray();
-        return array[randomIndex];
-    }
 
 
 }

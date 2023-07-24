@@ -1,26 +1,24 @@
 package com.skypro.coursework2.controller;
 
 import com.skypro.coursework2.model.Question;
-
 import com.skypro.coursework2.services.api.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
-
-@RequestMapping("/exam/java")
-public class JavaQuestionController {
+@RequestMapping("/exam/math")
+public class MathQuestionController {
 
 
     private final QuestionService questionService;
 
     @Autowired
-    public JavaQuestionController(@Qualifier("javaImplementation") QuestionService questionService) {
+    public MathQuestionController(@Qualifier("mathImplementation") QuestionService questionService) {
         this.questionService = questionService;
     }
 
@@ -44,6 +42,4 @@ public class JavaQuestionController {
     public String getAll() {
         return questionService.getAll().toString();
     }
-
-
 }

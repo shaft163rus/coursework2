@@ -2,36 +2,45 @@ package com.skypro.coursework2.services.impl;
 
 import com.skypro.coursework2.exceptions.InvalidQuestionAmountException;
 import com.skypro.coursework2.model.Question;
+import com.skypro.coursework2.repository.QuestionRepository;
 import com.skypro.coursework2.services.api.ExaminerService;
 import com.skypro.coursework2.services.api.QuestionService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 
 public class ExaminerServiceImpl implements ExaminerService {
-    private final Set<Question> examQuestions = new HashSet<>();
-    private final QuestionService javaQuestionService;
 
-    public ExaminerServiceImpl(QuestionService questionService) {
-        this.javaQuestionService = questionService;
+    private final List<QuestionRepository> javaAndMathQuestions;
+
+
+    public ExaminerServiceImpl(@Qualifier("javaRepo") QuestionRepository javaQuestionsRepository, @Qualifier("mathRepo") QuestionRepository mathQuestionsRepository) {
+        this.javaAndMathQuestions = Arrays.asList(javaQuestionsRepository, mathQuestionsRepository);
+
+
     }
 
 
     @Override
-    public Set<Question> getQuestions(int amount) {
+    public List<Question> getRandomMathAndJavaQuestions(int amount) {
 
-        if (javaQuestionService.getAll().size() < amount) {
-            throw new InvalidQuestionAmountException("Invalid amount");
+        List<Question> result = new ArrayList<>(javaAndMathQuestions.get(0).getAll());
+        result.addAll(javaAndMathQuestions.get(1).getAll());
+        Collections.shuffle(result);
+
+        if (result.size() < amount) {
+            throw new InvalidQuestionAmountException("The number of questions is too large");
         }
 
-        while (examQuestions.size() <= amount) {
-            examQuestions.add(javaQuestionService.getRandomQuestion());
-        }
-
-        return examQuestions;
+        return result.subList(0, amount);
     }
+
+
 }
