@@ -17,7 +17,7 @@ public class ExamController {
     }
     @GetMapping(path = "/exam/java/{amount}")
     public HashMap<String, String> getQuestions(@PathVariable int amount) {
-        examService.getQuestions(amount);
-        return null;
+
+        return  examService.getQuestions(amount);
     }
 }
